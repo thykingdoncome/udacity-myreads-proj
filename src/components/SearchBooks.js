@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
+import _ from "lodash.debounce";
 import * as BooksAPI from "../BooksAPI";
 import BookShelf from "./BookShelf";
 import Spinner from "./Spinner";
@@ -11,6 +12,7 @@ export class SearchBooks extends Component {
     let { value } = e.target;
     this.setState({ query: value });
     this.onSubmit(value);
+    // _(this.onSubmit(value), 1000);
   };
 
   selectChangeHandler = (e, book) => {
@@ -108,7 +110,9 @@ export class SearchBooks extends Component {
                 }
               />
             ) : (
-              <h2 style={{ textAlign: "center" }}>Nothing to display</h2>
+              !loadingBooks && (
+                <h2 style={{ textAlign: "center" }}>Nothing to display</h2>
+              )
             )}
           </div>
         </div>
