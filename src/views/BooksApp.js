@@ -120,47 +120,23 @@ class BooksApp extends React.Component {
       loadingBooks,
     } = this.state;
 
-    return (
-      <div className='app'>
+    return <div className='app'>
         <div className='list-books'>
           <Header title='MyReads' />
           <div className='list-books-content'>
             <div>
-              {this.state.loadingBooks ? (
-                <Spinner />
-              ) : (
-                <>
-                  <BookShelf
-                    shelf={currentlyReading}
-                    bookshelfTitle='Currently Reading'
-                    loadingBooks={loadingBooks}
-                    handleChange={this.selectChangeHandler}
-                    isEmptyMsg='No book on this shelf'
-                  />
-                  <BookShelf
-                    shelf={wantToread}
-                    bookshelfTitle='Want to Read Reading'
-                    loadingBooks={loadingBooks}
-                    handleChange={this.selectChangeHandler}
-                    isEmptyMsg='No book on this shelf'
-                  />
-                  <BookShelf
-                    shelf={booksRead}
-                    bookshelfTitle='Read'
-                    loadingBooks={loadingBooks}
-                    handleChange={this.selectChangeHandler}
-                    isEmptyMsg='No book on this shelf'
-                  />
-                </>
-              )}
+              {this.state.loadingBooks ? <Spinner /> : <>
+                  <BookShelf shelf={currentlyReading} bookshelfTitle='Currently Reading' loadingBooks={loadingBooks} handleChange={this.selectChangeHandler} isEmptyMsg='No book on this shelf' />
+                  <BookShelf shelf={wantToread} bookshelfTitle='Want to Read' loadingBooks={loadingBooks} handleChange={this.selectChangeHandler} isEmptyMsg='No book on this shelf' />
+                  <BookShelf shelf={booksRead} bookshelfTitle='Read' loadingBooks={loadingBooks} handleChange={this.selectChangeHandler} isEmptyMsg='No book on this shelf' />
+                </>}
             </div>
           </div>
           <div className='open-search'>
             <Link to='/search'>Add a book</Link>
           </div>
         </div>
-      </div>
-    );
+      </div>;
   }
 }
 
