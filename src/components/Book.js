@@ -45,6 +45,8 @@ Book.defaultProps = {
 
 Book.propTypes = {
   cover: PropTypes.string,
+  book: PropTypes.object.isRequired,
+  handleChange: PropTypes.func.isRequired,
 };
 
 export default Book;

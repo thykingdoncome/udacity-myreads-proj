@@ -1,11 +1,9 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import * as BooksAPI from "../BooksAPI";
-import Book from "../components/Book";
 import BookShelf from "../components/BookShelf";
 import Header from "../components/Header";
 import Spinner from "../components/Spinner";
-
 class BooksApp extends React.Component {
   state = {
     /**
@@ -115,7 +113,12 @@ class BooksApp extends React.Component {
   }
 
   render() {
-    const { wantToread, currentlyReading, booksRead } = this.state;
+    const {
+      wantToread,
+      currentlyReading,
+      booksRead,
+      loadingBooks,
+    } = this.state;
 
     return (
       <div className='app'>
@@ -127,59 +130,27 @@ class BooksApp extends React.Component {
                 <Spinner />
               ) : (
                 <>
-                  <BookShelf bookshelfTitle='Currently Reading'>
-                    {currentlyReading.length > 0 && !this.state.loadingBooks ? (
-                      currentlyReading.map(book => (
-                        <li key={book.id}>
-                          <Book
-                            book={book}
-                            cover={book.imageLinks["smallThumbnail"]}
-                            handleChange={e =>
-                              this.selectChangeHandler(e, book)
-                            }
-                          />
-                        </li>
-                      ))
-                    ) : (
-                      <h2>No book on this shelf</h2>
-                    )}
-                  </BookShelf>
-
-                  <BookShelf bookshelfTitle='Want to Read'>
-                    {wantToread.length > 0 && !this.state.loadingBooks ? (
-                      wantToread.map(book => (
-                        <li key={book.id}>
-                          <Book
-                            book={book}
-                            cover={book.imageLinks["smallThumbnail"]}
-                            handleChange={e =>
-                              this.selectChangeHandler(e, book)
-                            }
-                          />
-                        </li>
-                      ))
-                    ) : (
-                      <h2>No book on this shelf</h2>
-                    )}
-                  </BookShelf>
-
-                  <BookShelf bookshelfTitle='Read'>
-                    {booksRead.length > 0 && !this.state.loadingBooks ? (
-                      booksRead.map(book => (
-                        <li key={book.id}>
-                          <Book
-                            book={book}
-                            cover={book.imageLinks["smallThumbnail"]}
-                            handleChange={e =>
-                              this.selectChangeHandler(e, book)
-                            }
-                          />
-                        </li>
-                      ))
-                    ) : (
-                      <h2>No book on this shelf</h2>
-                    )}
-                  </BookShelf>
+                  <BookShelf
+                    shelf={currentlyReading}
+                    bookshelfTitle='Currently Reading'
+                    loadingBooks={loadingBooks}
+                    handleChange={this.selectChangeHandler}
+                    isEmptyMsg='No book on this shelf'
+                  />
+                  <BookShelf
+                    shelf={wantToread}
+                    bookshelfTitle='Want to Read Reading'
+                    loadingBooks={loadingBooks}
+                    handleChange={this.selectChangeHandler}
+                    isEmptyMsg='No book on this shelf'
+                  />
+                  <BookShelf
+                    shelf={booksRead}
+                    bookshelfTitle='Read'
+                    loadingBooks={loadingBooks}
+                    handleChange={this.selectChangeHandler}
+                    isEmptyMsg='No book on this shelf'
+                  />
                 </>
               )}
             </div>
