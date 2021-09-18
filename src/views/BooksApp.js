@@ -20,50 +20,43 @@ class BooksApp extends React.Component {
     booksRead: [],
     loadingBooks: false,
     updateLoading: false,
-    selectedShelf: "",
   };
 
   fetchBooks = async () => {
     this.setState({ loadingBooks: true });
 
-    const res = await BooksAPI.getAll().catch(ex => {
-      this.setState({ loadingBooks: false });
-    });
+    const res = await BooksAPI.getAll();
+
+    if (res.error) {
+      this.setState({ allBooks: [], loadingBooks: false });
+      return;
+    }
 
     this.setState({ allBooks: res });
 
     this.setState({ loadingBooks: false });
 
-    this.state.allBooks.map(book => {
-      let shelfValue = "";
-      if (book.shelf === "currentlyReading") {
-        shelfValue = book.shelf;
-        this.setState({
-          currentlyReading: [...this.state.currentlyReading, book],
-          selectedShelf: shelfValue,
-        });
-      }
-      if (book.shelf === "wantToRead") {
-        shelfValue = book.shelf;
-        this.setState({
-          wantToread: [...this.state.wantToread, book],
-          selectedShelf: shelfValue,
-        });
-      }
-      if (book.shelf === "read") {
-        shelfValue = book.shelf;
-        this.setState({
-          booksRead: [...this.state.booksRead, book],
-          selectedShelf: shelfValue,
-        });
-      }
-    });
+    this.state.allBooks.length > 0 &&
+      this.state.allBooks.forEach(book => {
+        if (book.shelf === "currentlyReading") {
+          this.setState({
+            currentlyReading: [...this.state.currentlyReading, book],
+          });
+        }
+        if (book.shelf === "wantToRead") {
+          this.setState({
+            wantToread: [...this.state.wantToread, book],
+          });
+        }
+        if (book.shelf === "read") {
+          this.setState({
+            booksRead: [...this.state.booksRead, book],
+          });
+        }
+      });
   };
 
   selectChangeHandler = (e, book) => {
-    this.setState({
-      selectedShelf: e.target.value,
-    });
     this.updateBook(book, e.target.value);
   };
 
@@ -139,16 +132,11 @@ class BooksApp extends React.Component {
                       currentlyReading.map(book => (
                         <li key={book.id}>
                           <Book
-                            title={book.title}
-                            authors={book.authors}
-                            cover={
-                              book.imageLinks &&
-                              book.imageLinks["smallThumbnail"]
-                            }
+                            book={book}
+                            cover={book.imageLinks["smallThumbnail"]}
                             handleChange={e =>
                               this.selectChangeHandler(e, book)
                             }
-                            selectValue={this.state.selectedShelf}
                           />
                         </li>
                       ))
@@ -162,13 +150,11 @@ class BooksApp extends React.Component {
                       wantToread.map(book => (
                         <li key={book.id}>
                           <Book
-                            title={book.title}
-                            authors={book.authors}
+                            book={book}
                             cover={book.imageLinks["smallThumbnail"]}
                             handleChange={e =>
                               this.selectChangeHandler(e, book)
                             }
-                            selectValue={this.state.selectedShelf}
                           />
                         </li>
                       ))
@@ -182,10 +168,8 @@ class BooksApp extends React.Component {
                       booksRead.map(book => (
                         <li key={book.id}>
                           <Book
-                            title={book.title}
-                            authors={book.authors}
+                            book={book}
                             cover={book.imageLinks["smallThumbnail"]}
-                            selectValue={this.state.selectedShelf}
                             handleChange={e =>
                               this.selectChangeHandler(e, book)
                             }
